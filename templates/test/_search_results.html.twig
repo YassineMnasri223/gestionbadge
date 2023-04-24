@@ -1,0 +1,11 @@
+<!-- templates/test/_search_results.html.twig -->
+
+{% if tests is not empty %}
+    <ul>
+        {% for test in tests %}
+            <li>{{ test.name }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No results found for "{{ searchTerm }}".</p>
+{% endif %}
