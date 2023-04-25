@@ -43,7 +43,7 @@ class TestRepository extends ServiceEntityRepository
     return $this->createQueryBuilder('t')
         ->where('t.name LIKE :searchTerm')
         ->setParameter('searchTerm', '%'.$searchTerm.'%')
-        ->orderBy('t.id', 'ASC')
+        ->orderBy('t.name', 'ASC')
         ->getQuery()
         ->getResult();
 }

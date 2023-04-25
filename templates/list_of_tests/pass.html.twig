@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Pass Test{% endblock %}
+
+{% block body %}
+    <h1>{{ test.name }}</h1>
+    <form method="post" action="{{ path('app_submit_answers', {'id': test.id}) }}">
+        {% for question in questions %}
+            <div>
+                <h3>{{ question.quest }}</h3>
+                <div>
+                    <label>
+                        <input type="radio" name="answer_{{ question.id }}" value="{{ question.choice1 }}">
+                        {{ question.choice1 }}
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input type="radio" name="answer_{{ question.id }}" value="{{ question.choice2 }}">
+                        {{ question.choice2 }}
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input type="radio" name="answer_{{ question.id }}" value="{{ question.choice3 }}">
+                        {{ question.choice3 }}
+                    </label>
+                </div>
+            </div>
+        {% endfor %}
+        <button action=type="submit">Submit</button>
+    </form>
+{% endblock %}

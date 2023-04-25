@@ -38,6 +38,15 @@ class QuestionRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+    public function findByTestId(int $testId): array
+{
+    $qb = $this->createQueryBuilder('q');
+    $qb->select('q.id', 'q.quest', 'q.choice1', 'q.choice2', 'q.choice3','q.respone')
+        ->where('q.test = :testId')
+        ->setParameter('testId', $testId);
+
+    return $qb->getQuery()->getResult();
+}
 
 //    /**
 //     * @return Question[] Returns an array of Question objects

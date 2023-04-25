@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Test Result{% endblock %}
+
+{% block body %}
+    <h1>{{ test.name }}</h1>
+    <p>Your score: {{ finalScore }}%</p>
+    <p>Number of correct answers: {{ correctAnswers }}/{{ questions|length }}</p>
+    <ul>
+        {% for question in questions %}
+            <li>
+                <h3>{{ question.quest }}</h3>
+                <ul>
+                    <li>Your answer: {{ userAnswers['answer_'~question.id] }}</li>
+                    <li>Correct answer: {{ question.respone }}</li>
+                </ul>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
