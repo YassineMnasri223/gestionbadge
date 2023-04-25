@@ -74,32 +74,31 @@ public function submitAnswers(Request $request, Test $test, QuestionRepository $
     }
 
     $finalScore = round(($score / count($questions)) * 100);
-     // Generate the PDF
-     $options = new Options();
-     $options->set('defaultFont', 'Arial');
-     $dompdf = new Dompdf($options);
- 
-     $html = $this->renderView('list_of_tests/pdf_template.html.twig', [
-         'test' => $test,
-         'questions' => $questions,
-         'userAnswers' => $userAnswers,
-         'finalScore' => $finalScore,
-         'correctAnswers' => $correctAnswers,
-     ]);
- 
-     $dompdf->loadHtml($html);
-     $dompdf->setPaper('A4', 'portrait');
-     $dompdf->render();
- 
-     $response = new Response($dompdf->output());
-     $disposition = $response->headers->makeDisposition(
-         ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-         'test_result.pdf'
-     );
-     $response->headers->set('Content-Disposition', $disposition);
- 
-     return $response;
+    // Generate the PDF
+    $options = new Options();
+    $options->set('defaultFont', 'Arial');
+    $dompdf = new Dompdf($options);
 
+    $html = $this->renderView('list_of_tests/pdf_template.html.twig', [
+        'test' => $test,
+        'questions' => $questions,
+        'userAnswers' => $userAnswers,
+        'finalScore' => $finalScore,
+        'correctAnswers' => $correctAnswers,
+    ]);
+
+    $dompdf->loadHtml($html);
+    $dompdf->setPaper('A4', 'portrait');
+    $dompdf->render();
+
+    $response = new Response($dompdf->output());
+    $disposition = $response->headers->makeDisposition(
+        ResponseHeaderBag::DISPOSITION_ATTACHMENT,
+        'test_result.pdf'
+    );
+    $response->headers->set('Content-Disposition', $disposition);
+
+    return $response;
     return $this->render('list_of_tests/results.html.twig', [
         'test' => $test,
         'questions' => $questions,
@@ -122,7 +121,6 @@ public function submitAnswers(Request $request, Test $test, QuestionRepository $
         ->getArrayResult();
         return $this->json($resultats);
     }
-
 
 
 }

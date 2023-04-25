@@ -11,25 +11,44 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 
 #[Route('/test')]
 class TestController extends AbstractController
 {
-    private $entityManager;
-
-    public function __construct(EntityManagerInterface $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
     #[Route('/', name: 'app_test_index', methods: ['GET'])]
-    public function index( TestRepository $testRepository): Response
+    public function index(Request $request, TestRepository $testRepository): Response
     {
+        $searchForm = $this->createFormBuilder()
+            ->setMethod('GET')
+            ->add('q', TextType::class, [
+                'label' => false,
+                'required' => false,
+                'attr' => [
+                    'placeholder' => 'Search by name',
+                    'class' => 'form-control',
+                ],
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => 'Search',
+                'attr' => [
+                    'class' => 'btn btn-outline-secondary',
+                ],
+            ])
+            ->getForm();
+    
+        $searchForm->handleRequest($request);
+    
+        if ($searchForm->isSubmitted() && $searchForm->isValid()) {
+            $searchTerm = $searchForm->getData()['q'];
+            $tests = $testRepository->searchByName($searchTerm);
+        } else {
             $tests = $testRepository->findAll();
+        }
     
         return $this->render('test/index.html.twig', [
             'tests' => $tests,
+            'searchForm' => $searchForm->createView(),
         ]);
     }
     
@@ -106,20 +125,6 @@ public function search(Request $request, TestRepository $testRepository): Respon
         'searchTerm' => $searchTerm,
     ]);
 }
-#[Route('/recherche_ajax', name: 'recherche_ajax_formation')]
-    public function rechercheAjax(Request $request): JsonResponse
-    {
-        $requestString = $request->query->get('searchValue');
-        
-        $resultats = $this->entityManager
-        ->createQuery(
-            'SELECT t
-            FROM App\Entity\Test t
-            WHERE t.name LIKE  :name')
-        ->setParameter('name', '%'.$requestString.'%' )
-        ->getArrayResult();
-        return new JsonResponse(['success' => 'test test']);
-    }
 
    
 
