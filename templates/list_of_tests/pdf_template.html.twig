@@ -40,7 +40,9 @@
             <li>
                 <h3>{{ question.quest }}</h3>
                 <ul>
-                    <li>Your answer: {{ userAnswers['answer_'~question.id] }}</li>
+                    {% if userAnswers['answer_'~question.id] is defined %}
+                        <li>Your answer: {{ userAnswers['answer_'~question.id] }}</li>
+                    {% endif %}
                     <li>Correct answer: {{ question.respone }}</li>
                 </ul>
             </li>
